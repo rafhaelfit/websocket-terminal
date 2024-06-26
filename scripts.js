@@ -9,7 +9,8 @@ class Logger {
     logArea.innerText += `>> ${message}\n`;
   }
   static received(message) {
-    logArea.innerText += `<< ${message}\n`;
+    const endString = message.endsWith("\n") ? "" : "\n";
+    logArea.innerText += `<< ${message}${endString}`;
   }
 
   static info(message) {
@@ -30,10 +31,17 @@ const logMessage = (message) => {
 };
 
 Logger.info(
-  "Welcome to the WebSocket Serial Monitor.\n      Enter the server URL and connect."
+  "Welcome to the WebSocket Terminal.\n      Enter a WebSocket Server address and connect it."
 );
 
 disconnectBtn.style.display = "none";
+addressInput.value =
+  decodeURI(window.location.hash.slice(1)) || "wss://echo.websocket.org/";
+
+addressInput.onkeydown = () => {
+  setTimeout(() => (window.location.hash = addressInput.value), 0);
+};
+
 let ws = null;
 
 sendMessageInput.onkeydown = (event) => {
@@ -52,13 +60,12 @@ sendMessageInput.onkeydown = (event) => {
 
   try {
     ws.send(`${message}\r\n`);
+    Logger.sent(message);
+    sendMessageInput.value = "";
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     Logger.error(message);
   }
-
-  Logger.send(message);
-  sendMessageInput.value = "";
 };
 
 connectBtn.onclick = () => {

@@ -8,20 +8,20 @@
   </head>
   <body>
     <div id="container">
-      <input
-        id="address-input"
-        type="text"
-        placeholder="WebSocket address (e.g. ws://localhost:80/path)"
-      />
+      <div id="top-container">
+        <input
+          id="address-input"
+          type="text"
+          placeholder="WebSocket address (e.g. wss://echo.websocket.org/)"
+        />
+        <button id="connect">Connect</button>
+        <button id="disconnect">Disconnect</button>
+      </div>
 
       <pre id="log-area"></pre>
 
       <input id="send-message-input" placeholder="Send message" type="text" />
-
-      <button id="connect">Connect</button>
-      <button id="disconnect">Disconnect</button>
     </div>
-
     <script src="./scripts.js"></script>
   </body>
 </html>
