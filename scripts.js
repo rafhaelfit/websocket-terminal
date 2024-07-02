@@ -11,20 +11,18 @@ class Logger {
     logArea.innerText += `>> ${message}\n`;
   }
   static received(message) {
+    const endString = message.endsWith("\n") ? "" : "\n";
+    logArea.innerText += `<< ${message}${endString}`;
+
     if (message.startsWith(ECHO_MESSAGE_PREFIX)) {
       const timestampSent = parseInt(message.split(" ")[2]);
       const diff = Date.now() - timestampSent;
 
-      debugger;
-
-      console.log(message);
-
-      Logger.info(`Echo tooks ${diff} ms.`);
+      Logger.info(
+        `Echo took ${diff} ms.\n      This is the time it takes for the sent message to return.`
+      );
       return;
     }
-
-    const endString = message.endsWith("\n") ? "" : "\n";
-    logArea.innerText += `<< ${message}${endString}`;
   }
 
   static info(message) {
