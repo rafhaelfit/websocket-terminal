@@ -4,11 +4,25 @@ const logArea = document.querySelector("#log-area");
 const connectBtn = document.querySelector("#connect");
 const disconnectBtn = document.querySelector("#disconnect");
 
+const ECHO_MESSAGE_PREFIX = "echo()";
+
 class Logger {
   static sent(message) {
     logArea.innerText += `>> ${message}\n`;
   }
   static received(message) {
+    if (message.startsWith(ECHO_MESSAGE_PREFIX)) {
+      const timestampSent = parseInt(message.split(" ")[2]);
+      const diff = Date.now() - timestampSent;
+
+      debugger;
+
+      console.log(message);
+
+      Logger.info(`Echo tooks ${diff} ms.`);
+      return;
+    }
+
     const endString = message.endsWith("\n") ? "" : "\n";
     logArea.innerText += `<< ${message}${endString}`;
   }
@@ -45,7 +59,7 @@ addressInput.onkeydown = () => {
 let ws = null;
 
 sendMessageInput.onkeydown = (event) => {
-  const message = event.target.value;
+  let message = event.target.value;
 
   if (event.key !== "Enter" || message === "") {
     return;
@@ -59,6 +73,10 @@ sendMessageInput.onkeydown = (event) => {
   }
 
   try {
+    if (message.startsWith(ECHO_MESSAGE_PREFIX)) {
+      message = `echo() # ${Date.now()}`;
+    }
+
     ws.send(`${message}\r\n`);
     Logger.sent(message);
     sendMessageInput.value = "";
